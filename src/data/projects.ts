@@ -1,4 +1,4 @@
-export type BusinessType = 'Hair Salon' | 'Tattoo Studio' | 'Nail Salon'
+export type BusinessType = 'Hair Salon' | 'Tattoo Studio' | 'Nail Salon' | 'Barbershop'
 
 export interface Project {
   id: string
@@ -14,43 +14,47 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: 'glamour-studio',
-    name: 'Glamour Studio',
-    type: 'Hair Salon',
-    styleLabel: 'Elegant & sophisticated',
-    description: 'Full booking system with real-time availability, service menu, and stylist profiles.',
-    images: [],
-    demoUrl: 'https://your-demo-url.vercel.app',
+    id: 'comandante-barber',
+    name: 'Comandante Barber Shop',
+    type: 'Barbershop',
+    styleLabel: 'Bold & masculine',
+    description: 'Full custom booking system built from scratch — clients choose service, barber, date and time. Includes real-time availability, service catalog, stylist profiles, and a complete admin dashboard.',
+    images: [
+      '/images/comandante_full.png',
+      '/images/comandante_book.png',
+      '/images/comandante_admin.png',
+    ],
+    demoUrl: 'https://comandante-barber-shop.vercel.app',
     featured: true,
   },
   {
-    id: 'shear-bliss',
-    name: 'Shear Bliss',
-    type: 'Hair Salon',
-    styleLabel: 'Soft & feminine',
-    description: 'Clean, conversion-focused landing page with gallery and contact form.',
+    id: 'classic-barber',
+    name: 'Classic Barber Shop',
+    type: 'Barbershop',
+    styleLabel: 'Classic & warm',
+    description: 'Conversion-focused site with gallery, testimonials, Google Maps integration, and a direct call-to-action. Built to turn searchers into walk-ins.',
     images: [
       '/images/screencapture-classic-cuts-modern-touch-lovable-app-2026-04-15-01_26_37.png',
     ],
-    demoUrl: 'https://your-demo-url-2.vercel.app',
+    demoUrl: 'https://classic-cuts-barbersh.vercel.app',
   },
   {
-    id: 'ink-collective',
-    name: 'Ink Collective',
+    id: 'big-bad-wolf',
+    name: 'Big Bad Wolf Tattoo',
     type: 'Tattoo Studio',
-    styleLabel: 'Dark editorial',
-    description: 'Portfolio-first design showcasing artist work with inquiry form.',
+    styleLabel: 'Bold & illustrated',
+    description: 'High-personality site matching the studio\'s cartoon-style branding. Showcases artist work, services, and walk-in availability.',
     images: [
       '/images/screencapture-wolf-roll-studio-lovable-app-2026-04-15-01_26_14.png',
     ],
-    demoUrl: 'https://your-demo-url-3.vercel.app',
+    demoUrl: 'https://big-bad-wolf-tattoos.vercel.app',
   },
   {
-    id: 'obsidian-ink',
-    name: 'Obsidian Ink',
+    id: 'pretty-ugly',
+    name: 'Pretty Ugly Tattoo',
     type: 'Tattoo Studio',
-    styleLabel: 'Bold & illustrated',
-    description: 'Dark, editorial aesthetic with flash sale section and artist bios.',
+    styleLabel: 'Dark editorial',
+    description: 'Minimalist black-and-white design for a fine line studio. Portfolio-first layout with artist story, selected work, and booking flow.',
     images: [
       '/images/screencapture-pretty-ugly-ink-site-lovable-app-2026-04-15-01_26_59.png',
       '/images/screencapture-pretty-ugly-ink-site-lovable-app-about-2026-04-15-01_27_10.png',
@@ -58,14 +62,14 @@ export const projects: Project[] = [
       '/images/screencapture-pretty-ugly-ink-site-lovable-app-portfolio-2026-04-15-01_27_39.png',
       '/images/screencapture-pretty-ugly-ink-site-lovable-app-contact-2026-04-15-01_27_57.png',
     ],
-    demoUrl: 'https://your-demo-url-4.vercel.app',
+    demoUrl: 'https://pretty-ugly-studio-site.vercel.app',
   },
   {
-    id: 'polish-lounge',
-    name: 'Polish Lounge',
+    id: 'luxe-nails',
+    name: 'Luxe Nails',
     type: 'Nail Salon',
-    styleLabel: 'Bright & playful',
-    description: 'Modern nail salon site with service menu and online booking widget.',
+    styleLabel: 'Soft & feminine',
+    description: 'Elegant nail salon site with service menu, gallery, and appointment booking. Designed to attract premium clients.',
     images: [
       '/images/screencapture-luxe-nails-style-lovable-app-2026-04-15-01_24_42.png',
       '/images/screencapture-luxe-nails-style-lovable-app-about-2026-04-15-01_25_07.png',
@@ -74,6 +78,6 @@ export const projects: Project[] = [
       '/images/screencapture-luxe-nails-style-lovable-app-booking-2026-04-15-01_25_50.png',
       '/images/screencapture-luxe-nails-style-lovable-app-contact-2026-04-15-01_25_43.png',
     ],
-    demoUrl: 'https://your-demo-url-5.vercel.app',
+    demoUrl: 'https://luxe-nails-nashville.vercel.app',
   },
 ]

@@ -2,7 +2,7 @@ const features = [
   {
     title: 'Online Booking',
     description:
-      'Clients book 24/7 without calling. Real-time availability, automated reminders, zero no-shows.',
+      'Clients book 24/7 without calling — choose service, pick a time, done. No more phone tag.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -16,7 +16,7 @@ const features = [
   {
     title: 'Mobile Optimized',
     description:
-      'Most of your clients search on their phone. Every site I build looks and works great on every screen.',
+      'Your clients search on their phones. Every site I build is fast, responsive, and looks sharp on any screen.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
@@ -27,7 +27,7 @@ const features = [
   {
     title: 'Local SEO Ready',
     description:
-      'Structured data, fast load times, and proper meta tags so Google shows your business to nearby customers.',
+      'Structured data, optimized meta tags, and fast load times — so Google shows your business to nearby customers first.',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="11" cy="11" r="8" />

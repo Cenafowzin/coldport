@@ -21,10 +21,10 @@
 /* Scroll preview animation — translates from top to bottom of a tall screenshot */
 @keyframes scroll-preview {
   0%,
-  8% {
+  15% {
     transform: translateY(0);
   }
-  92%,
+  85%,
   100% {
     transform: translateY(var(--scroll-end, -70%));
   }

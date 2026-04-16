@@ -4,9 +4,10 @@ import type { Project, BusinessType } from '../data/projects'
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 const TYPE_COLORS: Record<BusinessType, string> = {
-  'Hair Salon': 'bg-pink-900/50 text-pink-300 border-pink-800/50',
-  'Tattoo Studio': 'bg-zinc-800/60 text-zinc-300 border-zinc-700/50',
-  'Nail Salon': 'bg-violet-900/50 text-violet-300 border-violet-800/50',
+  'Barbershop':   'bg-amber-900/50 text-amber-300 border-amber-800/50',
+  'Hair Salon':   'bg-pink-900/50 text-pink-300 border-pink-800/50',
+  'Tattoo Studio':'bg-zinc-800/60 text-zinc-300 border-zinc-700/50',
+  'Nail Salon':   'bg-violet-900/50 text-violet-300 border-violet-800/50',
 }
 
 const PLACEHOLDER_GRADIENTS = [
@@ -17,9 +18,9 @@ const PLACEHOLDER_GRADIENTS = [
   'from-purple-900/60 to-zinc-900',
 ]
 
-/** Extracts a human-readable page name from a screenshot filename.
- *  e.g. "...-lovable-app-services-2026-..." → "Services"
- *       "...-lovable-app-2026-..."          → "Home"
+/** Extracts a readable page name from a screenshot filename.
+ *  "...-lovable-app-services-2026-..." → "Services"
+ *  "...-lovable-app-2026-..."          → "Home"
  */
 function getPageLabel(imgPath: string): string {
   const filename = imgPath.split('/').pop() ?? ''
@@ -72,15 +73,150 @@ function ScrollPreview({ src, alt, containerClass }: ScrollPreviewProps) {
         style={
           ready
             ? {
-                animation: 'scroll-preview 14s ease-in-out infinite alternate',
+                animation: 'scroll-preview 20s ease-in-out infinite alternate',
                 animationPlayState: paused ? 'paused' : 'running',
               }
             : undefined
         }
         onLoad={computeScroll}
       />
-      {/* fade hint at bottom */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-zinc-950/50 to-transparent" />
+    </div>
+  )
+}
+
+// ─── hybrid preview (scroll → tab cycling) ──────────────────────────────────
+// Used for the featured card. First image scrolls, remaining images cycle as tabs.
+
+const HYBRID_LABELS = ['Website', 'Online Booking', 'Admin Panel']
+// ms each slide is shown before advancing
+const HYBRID_DURATIONS = [18000, 5000, 5000]
+
+interface HybridPreviewProps {
+  images: string[]
+  alt: string
+  containerClass: string
+}
+
+function HybridPreview({ images, alt, containerClass }: HybridPreviewProps) {
+  const [fullSrc, ...tabSrcs] = images
+  const totalSlides = 1 + tabSrcs.length
+
+  const [slide, setSlide] = useState(0)
+  const [scrollKey, setScrollKey] = useState(0) // increment → restarts CSS anim
+  const [paused, setPaused] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [scrollEnd, setScrollEnd] = useState('-70%')
+  const [scrollReady, setScrollReady] = useState(false)
+
+  function computeScroll() {
+    const container = containerRef.current
+    const img = imgRef.current
+    if (!container || !img) return
+    const imgH = img.clientHeight
+    const containerH = container.clientHeight
+    if (imgH > containerH) {
+      const pct = (((imgH - containerH) / imgH) * 100).toFixed(1)
+      setScrollEnd(`-${pct}%`)
+    }
+    setScrollReady(true)
+  }
+
+  // auto-advance timer
+  useEffect(() => {
+    if (paused) return
+    const duration = HYBRID_DURATIONS[slide] ?? 4000
+    const id = setTimeout(() => {
+      const next = (slide + 1) % totalSlides
+      if (next === 0) setScrollKey((k) => k + 1) // restart scroll from top
+      setSlide(next)
+    }, duration)
+    return () => clearInterval(id)
+  }, [slide, paused, totalSlides])
+
+  function goToSlide(i: number) {
+    if (i === 0) setScrollKey((k) => k + 1)
+    setSlide(i)
+    setPaused(true)
+  }
+
+  const label = HYBRID_LABELS[slide] ?? ''
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden ${containerClass}`}
+      style={{ '--scroll-end': scrollEnd } as React.CSSProperties}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* ── slide 0: full-page scroll ── */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-700 ${
+          slide === 0 ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        {fullSrc && (
+          <img
+            key={scrollKey}
+            ref={imgRef}
+            src={fullSrc}
+            alt={`${alt} — Website`}
+            className="w-full h-auto"
+            style={
+              scrollReady
+                ? {
+                    animation: 'scroll-preview 18s ease-in-out forwards',
+                    animationPlayState:
+                      slide === 0 && !paused ? 'running' : 'paused',
+                  }
+                : undefined
+            }
+            onLoad={computeScroll}
+          />
+        )}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-zinc-950/50 to-transparent" />
+      </div>
+
+      {/* ── slides 1+: static tab images ── */}
+      {tabSrcs.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt={`${alt} — ${HYBRID_LABELS[i + 1] ?? ''}`}
+          className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${
+            slide === i + 1 ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      ))}
+
+      {/* ── label ── */}
+      <div className="absolute bottom-2 left-3 z-10 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-zinc-300 backdrop-blur-sm">
+        {label}
+      </div>
+
+      {/* ── dot indicators ── */}
+      {totalSlides > 1 && (
+        <div className="absolute bottom-2.5 right-3 z-10 flex items-center gap-1">
+          {Array.from({ length: totalSlides }).map((_, i) => (
+            <button
+              key={i}
+              onClick={(e) => {
+                e.preventDefault()
+                goToSlide(i)
+              }}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === slide
+                  ? 'w-4 bg-white'
+                  : 'w-1.5 bg-white/35 hover:bg-white/60'
+              }`}
+              aria-label={HYBRID_LABELS[i] ?? ''}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -123,12 +259,12 @@ function TabPreview({ images, alt, containerClass }: TabPreviewProps) {
       ))}
 
       {/* active page label */}
-      <div className="absolute bottom-2 left-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-zinc-300 backdrop-blur-sm">
+      <div className="absolute bottom-2 left-3 z-10 rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-zinc-300 backdrop-blur-sm">
         {getPageLabel(images[active] ?? '')}
       </div>
 
       {/* dot indicators */}
-      <div className="absolute bottom-2.5 right-3 flex items-center gap-1">
+      <div className="absolute bottom-2.5 right-3 z-10 flex items-center gap-1">
         {images.map((_, i) => (
           <button
             key={i}
@@ -191,6 +327,16 @@ export default function ProjectCard({ project, index, featured = false }: Props)
     if (images.length === 0) {
       return <PlaceholderPreview gradient={gradient} containerClass={imageContainerClass} />
     }
+    // Featured card: scroll first image, then cycle through the rest
+    if (featured) {
+      return (
+        <HybridPreview
+          images={images}
+          alt={project.name}
+          containerClass={imageContainerClass}
+        />
+      )
+    }
     if (images.length === 1) {
       return (
         <ScrollPreview
@@ -215,7 +361,7 @@ export default function ProjectCard({ project, index, featured = false }: Props)
         featured ? 'flex-col md:flex-row' : 'flex-col'
       }`}
     >
-      {/* image / preview column */}
+      {/* preview column */}
       <div
         className={`relative shrink-0 overflow-hidden ${
           featured ? 'w-full md:w-[55%]' : 'w-full'
