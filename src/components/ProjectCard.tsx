@@ -136,7 +136,8 @@ function HybridPreview({ images, alt, containerClass }: HybridPreviewProps) {
     return () => clearInterval(id)
   }, [slide, paused, totalSlides])
 
-  function goToSlide(i: number) {
+  function goToSlide(e: React.MouseEvent, i: number) {
+    e.stopPropagation()
     if (i === 0) setScrollKey((k) => k + 1)
     setSlide(i)
     setPaused(true)
@@ -205,7 +206,7 @@ function HybridPreview({ images, alt, containerClass }: HybridPreviewProps) {
               key={i}
               onClick={(e) => {
                 e.preventDefault()
-                goToSlide(i)
+                goToSlide(e, i)
               }}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === slide
@@ -270,6 +271,7 @@ function TabPreview({ images, alt, containerClass }: TabPreviewProps) {
             key={i}
             onClick={(e) => {
               e.preventDefault()
+              e.stopPropagation()
               setActive(i)
               setPaused(true)
             }}
@@ -355,9 +357,14 @@ export default function ProjectCard({ project, index, featured = false }: Props)
     )
   }
 
+  function openDemo() {
+    window.open(project.demoUrl, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <article
-      className={`group flex overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 transition-all duration-200 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_12px_40px_rgba(255,255,255,0.06)] ${
+      onClick={openDemo}
+      className={`group flex cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 transition-all duration-200 hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_12px_40px_rgba(255,255,255,0.06)] ${
         featured ? 'flex-col md:flex-row' : 'flex-col'
       }`}
     >
@@ -416,6 +423,7 @@ export default function ProjectCard({ project, index, featured = false }: Props)
           href={project.demoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
           className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-100 transition hover:border-brand/60 hover:bg-zinc-700 hover:text-white"
         >
           View live demo
